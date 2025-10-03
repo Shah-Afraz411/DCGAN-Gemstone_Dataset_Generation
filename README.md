@@ -15,6 +15,31 @@
 
 ---
 
+## 🔄 Workflow Diagram
+
+```mermaid
+flowchart TD
+  A["Raw Gemstone Images\ndata/raw/*"] --> B["Validation & Filtering"]
+  B --> C["Transforms\nResize → CenterCrop64\nRGB Convert\nNormalize (-1,1)"]
+  C --> D["DataLoader\nBatches"]
+  D --> E["Training Loop"]
+  E -->|"Sample z ~ N(0,1)"| G["Generator G"]
+  E -->|"Real & Fake Batches"| H["Discriminator D"]
+  G --> H
+  H --> E
+  G --> I["Sample Grid Logger\nresults/samples/*.png"]
+  H --> J["Loss Curves\nG_loss / D_loss"]
+  G --> K["Metric Script (FID / IS)"]
+  K --> M["Checkpoint Selection"]
+  M --> N["Best Generator Weights"]
+  N --> O["Export Synthetic Set"]
+  O --> P["Augment Real Training Data"]
+  P --> Q["Identification Model\n(e.g., ResNet)"]
+  Q --> R["Compare Metrics\nReal vs Real+Synthetic"]
+```
+
+---
+
 ## 📂 Repository Contents
 | Path | Description |
 |------|-------------|
